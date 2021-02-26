@@ -1,0 +1,46 @@
+package analizadores;
+import java_cup.runtime.*;
+import App.*;
+
+parser code
+{:
+
+    public int contador=0;
+
+    public void syntax_error(Symbol s)
+    {
+        System.err.println("Error en la Linea " + (s.right+1) +" Columna "+(s.left+1)+ ". Identificador "+s.value + " no reconocido. Se ha recuperado del error." );
+    }
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+        System.err.println("Error en la Linea " + (s.right+1)+ " Columna "+(s.left+1)+". Identificador " +s.value + " no reconocido.");
+    }
+:}
+
+
+terminal String Coma, Cierre, Virgulilla, Llave_a, Llave_c, P_coma, Dos_p, Flecha, conj, palabra, Lista;
+terminal String Reg, Cadena;
+terminal String L, numero;
+terminal String D;
+
+non terminal INICIO;
+non terminal EXP;
+non terminal DECLARACION, SENTENCIA, NOTACION, LISTA;
+
+start with INICIO;  
+
+INICIO ::= EXP;
+
+EXP ::= Llave_a DECLARACION Cierre SENTENCIA Llave_c /*:d {:App.Principal.list_of_words+=d+"\n";:}*/ ;
+
+SENTENCIA ::= SENTENCIA palabra Dos_p Cadena P_coma
+              | palabra Dos_p Cadena P_coma;
+
+DECLARACION ::= DECLARACION conj Dos_p palabra Flecha NOTACION P_coma{::}
+               | DECLARACION  palabra:dec {:App.Principal.list_of_words+=dec+"\n";:} Flecha Reg :expresion {:App.Principal.list_of_words+=expresion+"\n";:} P_coma 
+               | conj Dos_p palabra Flecha NOTACION P_coma{::}
+               | palabra:dec {:App.Principal.list_of_words+=dec+"\n";:} Flecha Reg:expresion {:App.Principal.list_of_words+=expresion+"\n";:} P_coma;        
+
+NOTACION ::= D  Virgulilla D 
+            |L Virgulilla L 
+            |Lista;
