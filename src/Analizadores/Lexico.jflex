@@ -22,24 +22,29 @@ L = [a-zA-Z_]
 Cadena = "\""(.*)"\""
 palabra = ({L}+|{D}*)+
 lista = (([0-9]{BLANCOS}*",")+{BLANCOS}*|[0-9])+
+lista_letras = (({L}{BLANCOS}*",")+{BLANCOS}*|{L})+
 numero = [0-9]","{BLANCOS}
-
-Reg = (("."{BLANCOS}*|"|"{BLANCOS}*|"*"{BLANCOS}*|"+"{BLANCOS}*|"?"{BLANCOS}*)+{BLANCOS}*(["{"[a-zA-Z_]+"}"]{BLANCOS}*|[\"(.*)\"]{BLANCOS}*)+)+
+Operador = ("."|"|"|"*"|"+"|"?")
+ExpReg = "{"[a-zA-Z_]+"}"
+//ExpReg = (("."{BLANCOS}*|"|"{BLANCOS}*|"*"{BLANCOS}*|"+"{BLANCOS}*|"?"{BLANCOS}*)+{BLANCOS}*)+
+//Conjunto = 
 COMENTARIO = "//"(.*)
 //COMENTARIO = [(<!([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\!+>)|(//.*)]
 
 %%
 
 //"|" {return new Symbol(sym.Pipe, yyline, yychar, yytext());}
-"%%\n%%" {return new Symbol(sym.Cierre, yyline, yychar, yytext());}
+"%" {return new Symbol(sym.Cierre, yyline, yychar, yytext());}
 "~" {return new Symbol(sym.Virgulilla, yyline, yychar, yytext());}
 "{" {return new Symbol(sym.Llave_a, yyline, yychar, yytext());}
 "}" {return new Symbol(sym.Llave_c, yyline, yychar, yytext());}
 ";" {return new Symbol(sym.P_coma, yyline, yychar, yytext());}
 ":" {return new Symbol(sym.Dos_p, yyline, yychar, yytext());}
 //"?" {return new Symbol(sym.Interrogacion, yyline, yychar, yytext());}
-//"*" {return new Symbol(sym.Aterisco, yyline, yychar, yytext());}
-"->" {return new Symbol(sym.Flecha, yyline, yychar, yytext());}
+//"*" {return new Symbol(sym.Asterisco, yyline, yychar, yytext());}
+//"+" {return new Symbol(sym.Mas, yyline, yychar, yytext());}
+"-" {return new Symbol(sym.Menos, yyline, yychar, yytext());}
+">" {return new Symbol(sym.Mayor, yyline, yychar, yytext());}
 //"." {return new Symbol(sym.Punto, yyline, yychar, yytext());}
 "," {return new Symbol(sym.Coma, yyline, yychar, yytext());}
 "CONJ" {return new Symbol(sym.conj, yyline, yychar, yytext());}
@@ -52,8 +57,11 @@ COMENTARIO = "//"(.*)
 {numero}   {return new Symbol(sym.numero, yycolumn, yyline, yytext());}
 {palabra} {return new Symbol(sym.palabra,yycolumn,yyline,yytext());}
 {lista} {return new Symbol(sym.Lista,yycolumn,yyline,yytext());}
+{lista_letras} {return new Symbol(sym.Lista_letras,yycolumn,yyline,yytext());}
 {Cadena}    {return new Symbol(sym.Cadena, yycolumn, yyline, yytext());}
-{Reg} {return new Symbol(sym.Reg,yycolumn,yyline,yytext());}
+//{Reg} {return new Symbol(sym.Reg,yycolumn,yyline,yytext());}
+{Operador} {return new Symbol(sym.Operador,yycolumn,yyline,yytext());}
+{ExpReg} {return new Symbol(sym.ExpReg,yycolumn,yyline,yytext());}
 
 .   {
 	    System.err.println("Error lexico: "+yytext()+ " Linea:"+(yyline)+" Columna:"+(yycolumn));

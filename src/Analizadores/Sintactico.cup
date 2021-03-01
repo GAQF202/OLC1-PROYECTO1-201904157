@@ -1,12 +1,14 @@
 package analizadores;
 import java_cup.runtime.*;
 import App.*;
+import App.Clases.MyStack;
+import java.util.*;
+import App.Clases.Element;
 
 parser code
 {:
 
     public int contador=0;
-
     public void syntax_error(Symbol s)
     {
         System.err.println("Error en la Linea " + (s.right+1) +" Columna "+(s.left+1)+ ". Identificador "+s.value + " no reconocido. Se ha recuperado del error." );
@@ -18,29 +20,52 @@ parser code
 :}
 
 
-terminal String Coma, Cierre, Virgulilla, Llave_a, Llave_c, P_coma, Dos_p, Flecha, conj, palabra, Lista;
-terminal String Reg, Cadena;
-terminal String L, numero;
+terminal String Coma, Cierre, Virgulilla, Llave_a, Llave_c, P_coma, Dos_p, conj, palabra, Lista, Pipe, Punto, Asterisco, Mas, Interrogacion;
+terminal String Reg, Cadena, Menos, Mayor,Lista_letras;
+terminal String L, numero, Operador, ExpReg;
 terminal String D;
 
 non terminal INICIO;
 non terminal EXP;
-non terminal DECLARACION, SENTENCIA, NOTACION, LISTA;
+non terminal DECLARACION, SENTENCIA, NOTACION, LISTA, REG, OPERANDO;
+
+precedence right Pipe;
+precedence right Punto;
+precedence right Asterisco, Mas, Interrogacion;
 
 start with INICIO;  
 
 INICIO ::= EXP;
 
-EXP ::= Llave_a DECLARACION Cierre SENTENCIA Llave_c /*:d {:App.Principal.list_of_words+=d+"\n";:}*/ ;
+EXP ::= Llave_a DECLARACION Cierre Cierre Cierre Cierre SENTENCIA Llave_c /*:d {:App.Principal.list_of_words+=d+"\n";:}*/ ;
 
 SENTENCIA ::= SENTENCIA palabra Dos_p Cadena P_coma
               | palabra Dos_p Cadena P_coma;
 
-DECLARACION ::= DECLARACION conj Dos_p palabra Flecha NOTACION P_coma{::}
-               | DECLARACION  palabra:dec {:App.Principal.list_of_words+=dec+"\n";:} Flecha Reg :expresion {:App.Principal.list_of_words+=expresion+"\n";:} P_coma 
-               | conj Dos_p palabra Flecha NOTACION P_coma{::}
-               | palabra:dec {:App.Principal.list_of_words+=dec+"\n";:} Flecha Reg:expresion {:App.Principal.list_of_words+=expresion+"\n";:} P_coma;        
+DECLARACION ::= DECLARACION conj Dos_p palabra Menos Mayor NOTACION P_coma{:App.Principal.Reconocido.ConvertToInfix(App.Principal.Characters.getPila()); parser.contador=0;:}
+               | DECLARACION  palabra Menos Mayor REG P_coma {:App.Principal.Reconocido.ConvertToInfix(App.Principal.Characters.getPila()); parser.contador=0;:}
+               | conj Dos_p palabra Menos Mayor NOTACION P_coma{::}
+               | palabra Menos Mayor REG P_coma;        
+
+REG ::= REG Operador:operador {:App.Principal.Characters.InsertInStack(new Element(operador,"operador",parser.contador));:}
+        |REG ExpReg:conjunto {:App.Principal.Characters.InsertInStack(new Element(conjunto,"conjunto",parser.contador));:}
+        |REG Cadena:cadena {:App.Principal.Characters.InsertInStack(new Element(cadena,"cadena",parser.contador));:}
+        |Operador:operador {:App.Principal.Characters.InsertInStack(new Element(operador,"operador",parser.contador));:}
+        |ExpReg:conjunto {:App.Principal.Characters.InsertInStack(new Element(conjunto,"conjunto",parser.contador));:}
+        |Cadena:cadena {:App.Principal.Characters.InsertInStack(new Element(cadena,"cadena",parser.contador));:};
+
+/*REG ::= Punto REG REG
+        |Pipe REG REG 
+        |Mas REG 
+        |Asterisco REG
+        |Interrogacion REG
+        |OPERANDO;
+
+OPERANDO ::= ExpReg
+            |Cadena;*/
+
 
 NOTACION ::= D  Virgulilla D 
             |L Virgulilla L 
-            |Lista;
+            |Lista
+            |Lista_letras;
