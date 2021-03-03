@@ -34,17 +34,14 @@ public class Lexemes_found {
         String derecho="";
         String izquierdo="";
         String aux="";
-        Node nodo = new Node(0,0,"",0);
+
 
         
         while(pila.empty()==false){
             character = (Element)pila.pop();
             character.id = count++;
             if(character.nombre.equals("conjunto")||character.nombre.equals("cadena")){
-                nodo.valor = character.valor;
-                nodo.id = character.id;
-                nodo.hder = 0;
-                nodo.hizq = 0;
+
                 if (derecho.equals("") && izquierdo.equals("")){
                     derecho = character.valor;
                     actual = derecho;
@@ -66,16 +63,12 @@ public class Lexemes_found {
                     idAct = idIzq;
                 }
             }else if(character.valor.equals("|")||character.valor.equals(".")){
-                nodo.valor = character.valor;
-                nodo.id = character.id;
-                nodo.hder = idDer;
-                nodo.hizq = idIzq;
+
                 if(!aux.equals("") && izquierdo.equals("") ){
                     derecho = derecho +character.valor+ aux;
                     actual = derecho;
                     idDer = character.id;
                     idAct = idDer;
-                    nodo.hizq = idAux;
                     idAux = 0;
                     aux = "";
                 }else{
@@ -87,10 +80,6 @@ public class Lexemes_found {
                     idAct = idDer;
                 }
             }else if(character.valor.equals("*")||character.valor.equals("+")||character.valor.equals("?")){
-                nodo.valor = character.valor;
-                nodo.id = character.id;
-                nodo.hder = 0;
-                nodo.hizq = idAct;
  
                 if(izquierdo.equals(actual)){
                     izquierdo = "("+izquierdo+")" + character.valor;
@@ -107,7 +96,6 @@ public class Lexemes_found {
             }
             /*System.out.println(Integer.toString(nodo.hizq) +"  "+ Integer.toString(nodo.hder)+" "
             +Integer.toString(nodo.id));*/
-            dotCode += nodo.getCodigoInterno();
         }
         System.out.println(dotCode);
         System.out.println(derecho);

@@ -30,7 +30,8 @@ public class Principal extends javax.swing.JFrame {
     public static Lexemes_found Reconocido = new Lexemes_found();
     public static List<Set> Conjuntos;
     public static MyStack Characters;
-    
+    public static List<Node> ExpsRegs = new ArrayList();
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -209,6 +210,7 @@ public class Principal extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Conjuntos = new ArrayList();
         Characters = new MyStack();
+        CreateFile writer = new CreateFile();
         
         list_of_words = "";
 
@@ -220,8 +222,23 @@ public class Principal extends javax.swing.JFrame {
             sintactico = new analizadores.parser(new analizadores.Lexico(new StringReader(content)));
             sintactico.parse();
             jTextArea1.setText(list_of_words);
+            
         } catch (Exception e) {
         }
+       // System.out.println(ExpsRegs.get(2).getCodigoInterno());
+        
+        for(int i=0; i<ExpsRegs.size(); i++){
+            //System.out.println(ExpsRegs.get(i).enumerador);
+            Node nodo = new Node(ExpsRegs.get(i),new Node(null,null,"#",ExpsRegs.get(i).id+1,"N",
+            Integer.toString(ExpsRegs.get(i).getUltimo()),Integer.toString(ExpsRegs.get(i).getUltimo()),ExpsRegs.get(i).getUltimo())
+            ,".",0,"N","","",0);
+ 
+            //parser.raiz.recorrerArbol(ExpsRegs.get(i));
+            parser.raiz.recorrerArbol(nodo);
+            //writer.CreateTree(ExpsRegs.get(i), list_of_words+"ExpresionRegular"+Integer.toString(i));
+            writer.CreateTree(nodo, list_of_words+"ExpresionRegular"+Integer.toString(i));
+        }
+        ExpsRegs.clear();
         jTextArea2.setText(Characters.getElements());
     }//GEN-LAST:event_jButton1ActionPerformed
 

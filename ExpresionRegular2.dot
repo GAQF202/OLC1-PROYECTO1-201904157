@@ -1,0 +1,21 @@
+digraph G{
+rankdir=UD
+node[shape=record]
+concentrate=true
+nodo21 [ label ="."];
+nodo14[label="{digito}"];
+nodo21->nodo14;
+nodo20 [ label ="*"];
+nodo19 [ label ="|"];
+nodo15[label="_"];
+nodo19->nodo15;
+nodo18 [ label ="|"];
+nodo16[label="{letra}"];
+nodo18->nodo16;
+nodo17[label="{digito}"];
+nodo18->nodo17;
+nodo19->nodo18;
+nodo20->nodo19;
+nodo21->nodo20;
+
+}

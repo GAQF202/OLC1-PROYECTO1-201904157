@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.swing.JFileChooser;
 
 /**
@@ -80,6 +81,31 @@ public class CreateFile {
             bf.close();
         }catch(Exception e){
             System.out.println(e.toString());
+        }
+    }
+    
+    public void CreateTree(Node dot, String name){
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        try {
+            fichero = new FileWriter("./" + name + ".dot");
+            pw = new PrintWriter(fichero);
+            pw.println("digraph G{");
+            pw.println("rankdir=UD");
+            pw.println("node[shape=record]");
+            pw.println("concentrate=true");
+            pw.println(dot.getCodigoInterno());
+            pw.println("}");
+        } catch (Exception e) {
+            System.out.println("error, no se realizo el archivo");
+        } finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
         }
     }
     

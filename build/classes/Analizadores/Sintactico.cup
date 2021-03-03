@@ -4,12 +4,17 @@ import App.*;
 import App.Clases.MyStack;
 import java.util.*;
 import App.Clases.Element;
+import App.Clases.Node;
 
 parser code
 {:
 
-    public int contador=0;
+    public int contador=1;
+    public int numeracion = 1;
+    public static Node raiz;
+
     public void syntax_error(Symbol s)
+
     {
         System.err.println("Error en la Linea " + (s.right+1) +" Columna "+(s.left+1)+ ". Identificador "+s.value + " no reconocido. Se ha recuperado del error." );
     }
@@ -27,7 +32,8 @@ terminal String D;
 
 non terminal INICIO;
 non terminal EXP;
-non terminal DECLARACION, SENTENCIA, NOTACION, LISTA, REG, OPERANDO;
+non terminal DECLARACION, SENTENCIA, NOTACION, LISTA, OPERANDO;
+non terminal Node REG;
 
 precedence right Pipe;
 precedence right Punto;
@@ -42,28 +48,18 @@ EXP ::= Llave_a DECLARACION Cierre Cierre Cierre Cierre SENTENCIA Llave_c /*:d {
 SENTENCIA ::= SENTENCIA palabra Dos_p Cadena P_coma
               | palabra Dos_p Cadena P_coma;
 
-DECLARACION ::= DECLARACION conj Dos_p palabra Menos Mayor NOTACION P_coma{:App.Principal.Reconocido.ConvertToInfix(App.Principal.Characters.getPila()); parser.contador=0;:}
-               | DECLARACION  palabra Menos Mayor REG P_coma {:App.Principal.Reconocido.ConvertToInfix(App.Principal.Characters.getPila()); parser.contador=0;:}
+DECLARACION ::= DECLARACION conj Dos_p palabra Menos Mayor NOTACION P_coma   //{:App.Principal.Reconocido.ConvertToInfix(App.Principal.Characters.getPila()); parser.contador=0;:}
+               | DECLARACION  palabra Menos Mayor REG:var1 P_coma{:parser.raiz=var1; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion);parser.contador=1; parser.numeracion = 1;:}
                | conj Dos_p palabra Menos Mayor NOTACION P_coma{::}
-               | palabra Menos Mayor REG P_coma;        
+               | palabra Menos Mayor REG:var1 P_coma{:parser.raiz=var1; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion); parser.contador=1; parser.numeracion = 1; :} ;       
 
-REG ::= REG Operador:operador {:App.Principal.Characters.InsertInStack(new Element(operador,"operador",parser.contador));:}
-        |REG ExpReg:conjunto {:App.Principal.Characters.InsertInStack(new Element(conjunto,"conjunto",parser.contador));:}
-        |REG Cadena:cadena {:App.Principal.Characters.InsertInStack(new Element(cadena,"cadena",parser.contador));:}
-        |Operador:operador {:App.Principal.Characters.InsertInStack(new Element(operador,"operador",parser.contador));:}
-        |ExpReg:conjunto {:App.Principal.Characters.InsertInStack(new Element(conjunto,"conjunto",parser.contador));:}
-        |Cadena:cadena {:App.Principal.Characters.InsertInStack(new Element(cadena,"cadena",parser.contador));:};
-
-/*REG ::= Punto REG REG
-        |Pipe REG REG 
-        |Mas REG 
-        |Asterisco REG
-        |Interrogacion REG
-        |OPERANDO;
-
-OPERANDO ::= ExpReg
-            |Cadena;*/
-
+REG ::= Punto:operador REG:var1 REG:var2 {:RESULT=new Node(var1, var2, operador, parser.contador,"N","","",0); parser.contador++;:}
+        |Pipe:operador REG:var1 REG :var2 {:RESULT=new Node(var1, var2, operador, parser.contador,"N","","",0); parser.contador++;:}
+        |Mas:operador REG :var1 {:RESULT=new Node(var1, null, operador, parser.contador,"N","","",0); parser.contador++;:}
+        |Asterisco:operador REG :var1 {:RESULT=new Node(var1, null, operador, parser.contador,"A","","",0); parser.contador++;:}
+        |Interrogacion:operador REG :var1 {:RESULT=new Node(var1, null, operador, parser.contador,"A","","",0); parser.contador++;:}
+        |ExpReg:operador {:RESULT=new Node(null, null, operador, parser.contador,"N",Integer.toString(parser.contador),Integer.toString(parser.contador),parser.numeracion);parser.numeracion++; parser.contador++;:}
+        |Cadena:operador {:RESULT=new Node(null, null, operador.replace("\"",""), parser.contador,"N",Integer.toString(parser.contador),Integer.toString(parser.contador),parser.numeracion);parser.numeracion++; parser.contador++;:};
 
 NOTACION ::= D  Virgulilla D 
             |L Virgulilla L 
