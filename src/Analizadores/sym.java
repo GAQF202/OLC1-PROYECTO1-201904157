@@ -9,32 +9,33 @@ package analizadores;
 public class sym {
   /* terminals */
   public static final int Virgulilla = 4;
-  public static final int Dos_p = 8;
-  public static final int ExpReg = 25;
+  public static final int Dos_p = 7;
+  public static final int ExpReg = 24;
   public static final int Cierre = 3;
-  public static final int Mas = 15;
-  public static final int numero = 23;
-  public static final int Mayor = 20;
-  public static final int conj = 9;
-  public static final int L = 22;
+  public static final int Cadenita = 25;
+  public static final int Mas = 14;
+  public static final int numero = 21;
+  public static final int Mayor = 18;
+  public static final int conj = 8;
+  public static final int L = 20;
   public static final int Llave_c = 6;
   public static final int Llave_a = 5;
   public static final int Coma = 2;
-  public static final int P_coma = 7;
-  public static final int Asterisco = 14;
-  public static final int D = 26;
-  public static final int Operador = 24;
-  public static final int Cadena = 18;
-  public static final int Reg = 17;
+  public static final int P_coma = 26;
+  public static final int Asterisco = 13;
+  public static final int D = 27;
+  public static final int Cadena = 23;
+  public static final int Operador = 22;
+  public static final int Reg = 16;
   public static final int EOF = 0;
-  public static final int Lista = 11;
-  public static final int Interrogacion = 16;
-  public static final int palabra = 10;
+  public static final int Lista = 10;
+  public static final int Interrogacion = 15;
+  public static final int palabra = 9;
   public static final int error = 1;
-  public static final int Menos = 19;
-  public static final int Punto = 13;
-  public static final int Lista_letras = 21;
-  public static final int Pipe = 12;
+  public static final int Menos = 17;
+  public static final int Punto = 12;
+  public static final int Lista_letras = 19;
+  public static final int Pipe = 11;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -43,7 +44,6 @@ public class sym {
   "Virgulilla",
   "Llave_a",
   "Llave_c",
-  "P_coma",
   "Dos_p",
   "conj",
   "palabra",
@@ -54,14 +54,16 @@ public class sym {
   "Mas",
   "Interrogacion",
   "Reg",
-  "Cadena",
   "Menos",
   "Mayor",
   "Lista_letras",
   "L",
   "numero",
   "Operador",
+  "Cadena",
   "ExpReg",
+  "Cadenita",
+  "P_coma",
   "D"
   };
 }

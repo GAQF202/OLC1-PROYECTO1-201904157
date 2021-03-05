@@ -31,7 +31,7 @@ public class Principal extends javax.swing.JFrame {
     public static List<Set> Conjuntos;
     public static MyStack Characters;
     public static List<Node> ExpsRegs = new ArrayList();
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -229,13 +229,23 @@ public class Principal extends javax.swing.JFrame {
         
         for(int i=0; i<ExpsRegs.size(); i++){
             //System.out.println(ExpsRegs.get(i).enumerador);
+            List<Siguiente> misSiguientes = new ArrayList(); 
+            Node.misSiguientes = misSiguientes;
             Node nodo = new Node(ExpsRegs.get(i),new Node(null,null,"#",ExpsRegs.get(i).id+1,"N",
             Integer.toString(ExpsRegs.get(i).getUltimo()),Integer.toString(ExpsRegs.get(i).getUltimo()),ExpsRegs.get(i).getUltimo())
             ,".",0,"N","","",0);
- 
-            //parser.raiz.recorrerArbol(ExpsRegs.get(i));
             parser.raiz.recorrerArbol(nodo);
-            //writer.CreateTree(ExpsRegs.get(i), list_of_words+"ExpresionRegular"+Integer.toString(i));
+            
+            Siguiente.tabularSiguientes(misSiguientes);
+            
+            //CALCULAR ESTADOS MANDANDO LA RAIZ DEL ARBOL COMO ESTADO INICIAL
+            Estado.calcularEstados(new Estado(0,nodo.anterior,nodo.anterior.split(","),null));
+            Estado.estadosUsados = new ArrayList();
+            Node.listaTerminales = new ArrayList();
+            List<Estado> misEstados = new ArrayList(); 
+            misEstados = Estado.misEstados;
+            Estado.tabularEstados(misEstados);
+            
             writer.CreateTree(nodo, list_of_words+"ExpresionRegular"+Integer.toString(i));
         }
         ExpsRegs.clear();

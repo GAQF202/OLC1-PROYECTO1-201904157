@@ -5,6 +5,7 @@ import App.Clases.MyStack;
 import java.util.*;
 import App.Clases.Element;
 import App.Clases.Node;
+import App.Clases.Siguiente;
 
 parser code
 {:
@@ -25,9 +26,9 @@ parser code
 :}
 
 
-terminal String Coma, Cierre, Virgulilla, Llave_a, Llave_c, P_coma, Dos_p, conj, palabra, Lista, Pipe, Punto, Asterisco, Mas, Interrogacion;
-terminal String Reg, Cadena, Menos, Mayor,Lista_letras;
-terminal String L, numero, Operador, ExpReg;
+terminal String Coma, Cierre, Virgulilla, Llave_a, Llave_c, Dos_p, conj, palabra, Lista, Pipe, Punto, Asterisco, Mas, Interrogacion;
+terminal String Reg, Menos, Mayor,Lista_letras;
+terminal String L, numero, Operador,Cadena, ExpReg, Cadenita, P_coma;
 terminal String D;
 
 non terminal INICIO;
@@ -35,9 +36,9 @@ non terminal EXP;
 non terminal DECLARACION, SENTENCIA, NOTACION, LISTA, OPERANDO;
 non terminal Node REG;
 
-precedence right Pipe;
+/*precedence right Pipe;
 precedence right Punto;
-precedence right Asterisco, Mas, Interrogacion;
+precedence right Asterisco, Mas, Interrogacion;*/
 
 start with INICIO;  
 
@@ -49,17 +50,17 @@ SENTENCIA ::= SENTENCIA palabra Dos_p Cadena P_coma
               | palabra Dos_p Cadena P_coma;
 
 DECLARACION ::= DECLARACION conj Dos_p palabra Menos Mayor NOTACION P_coma   //{:App.Principal.Reconocido.ConvertToInfix(App.Principal.Characters.getPila()); parser.contador=0;:}
-               | DECLARACION  palabra Menos Mayor REG:var1 P_coma{:parser.raiz=var1; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion);parser.contador=1; parser.numeracion = 1;:}
+               | DECLARACION  palabra Menos Mayor REG:var1 P_coma{:parser.raiz=var1; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion); Node.ult=parser.numeracion; parser.contador=1; parser.numeracion = 1;:}
                | conj Dos_p palabra Menos Mayor NOTACION P_coma{::}
-               | palabra Menos Mayor REG:var1 P_coma{:parser.raiz=var1; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion); parser.contador=1; parser.numeracion = 1; :} ;       
+               | palabra Menos Mayor REG:var1 P_coma{:parser.raiz=var1; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion);Node.ult=parser.numeracion; parser.contador=1; parser.numeracion = 1; :} ;       
 
 REG ::= Punto:operador REG:var1 REG:var2 {:RESULT=new Node(var1, var2, operador, parser.contador,"N","","",0); parser.contador++;:}
         |Pipe:operador REG:var1 REG :var2 {:RESULT=new Node(var1, var2, operador, parser.contador,"N","","",0); parser.contador++;:}
         |Mas:operador REG :var1 {:RESULT=new Node(var1, null, operador, parser.contador,"N","","",0); parser.contador++;:}
         |Asterisco:operador REG :var1 {:RESULT=new Node(var1, null, operador, parser.contador,"A","","",0); parser.contador++;:}
         |Interrogacion:operador REG :var1 {:RESULT=new Node(var1, null, operador, parser.contador,"A","","",0); parser.contador++;:}
-        |ExpReg:operador {:RESULT=new Node(null, null, operador, parser.contador,"N",Integer.toString(parser.contador),Integer.toString(parser.contador),parser.numeracion);parser.numeracion++; parser.contador++;:}
-        |Cadena:operador {:RESULT=new Node(null, null, operador.replace("\"",""), parser.contador,"N",Integer.toString(parser.contador),Integer.toString(parser.contador),parser.numeracion);parser.numeracion++; parser.contador++;:};
+        |ExpReg:operador {:RESULT=new Node(null, null, operador, parser.contador,"N",Integer.toString(parser.numeracion),Integer.toString(parser.numeracion),parser.numeracion);parser.numeracion++; parser.contador++;/*Siguiente.misSiguientes.add(new Siguiente(operador,Integer.toString(parser.numeracion)));*/:}
+        |Cadena:operador {:RESULT=new Node(null, null, operador.replace("\"",""), parser.contador,"N",Integer.toString(parser.numeracion),Integer.toString(parser.numeracion),parser.numeracion);parser.numeracion++; parser.contador++; /*Siguiente.misSiguientes.add(new Siguiente(operador,Integer.toString(parser.numeracion)));*/:};
 
 NOTACION ::= D  Virgulilla D 
             |L Virgulilla L 

@@ -5,6 +5,9 @@
  */
 package App.Clases;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Gerson
@@ -21,6 +24,10 @@ public class Node {
     public String siguiente;
     public int enumerador;
     public int ultimo;
+    
+    public static int ult;
+    public static List<Siguiente> misSiguientes;
+    public static List<String>listaTerminales=new ArrayList();
 
     public int getUltimo() {
         return ultimo;
@@ -41,28 +48,12 @@ public class Node {
         this.enumerador=enumerador;
     }
     
-      /* public String getCodigoInterno(){
-        String etiqueta="";
+    /*public static void calcularSiguientes(){
         
-        if(anterior.equals("")&&siguiente.equals("")&&hizq!=null){
-            anterior = "jeje";
-            siguiente = "equijde";
-            
-            if(hizq!=null && hder==null){
-                anterior = hizq.anterior + "," + hder.anterior;
-                siguiente = hizq.siguiente + "," + hder.siguiente;
-                etiqueta += hizq.getCodigoInterno()+ " " + anterior + " " + siguiente+" "+id;
-            }
-            if(hder!=null){
-                etiqueta += hder.getCodigoInterno()+ " " + anterior + " " + siguiente+" "+id;
-            }
-        }
-        
-
-        return etiqueta;
-    }*/
+    */
     
     public static void recorrerArbol(Node actual){
+        
         if(actual.siguiente.equals("") && actual.anterior.equals("")){
             if(actual.valor.equals(".")||actual.valor.equals("|")){
                 recorrerArbol(actual.hder);
@@ -79,7 +70,6 @@ public class Node {
                         actual.siguiente=actual.hizq.siguiente + "," + actual.hder.siguiente;
                     }
                 }else if(actual.valor.equals(".")){
- 
                     if(actual.hizq.anulabilidad.equals("A") && actual.hder.anulabilidad.equals("A")){
                         actual.anulabilidad="A";
                         actual.anterior= actual.hizq.anterior + "," + actual.hder.anterior;
@@ -97,15 +87,28 @@ public class Node {
                             actual.siguiente = actual.hder.siguiente;
                         }
                     }
-                    
+                    Siguiente.agregarSiguiente(actual.hizq.siguiente,actual.hder.anterior);
                 }
-                
             }else{
                 recorrerArbol(actual.hizq);
                 actual.anterior=actual.hizq.anterior;
                 actual.siguiente=actual.hizq.siguiente;
                 
+                if(actual.valor.equals("*") || actual.valor.equals("+")){
+                    Siguiente.agregarSiguiente(actual.siguiente,actual.anterior);
+                }                
             }
+        }else{
+            if(actual.hizq==null && actual.hder==null){
+                Siguiente nodoSig = new Siguiente(actual.valor,Integer.toString(actual.enumerador));
+                misSiguientes.add(nodoSig);
+                if(!listaTerminales.contains(actual.valor)){
+                    actual.valor = actual.valor.replace("{", "\\{");
+                    actual.valor = actual.valor.replace("}", "\\}");
+                    listaTerminales.add(actual.valor);
+                }
+            }
+
         }
     }
     

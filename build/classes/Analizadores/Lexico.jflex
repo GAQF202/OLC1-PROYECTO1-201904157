@@ -19,7 +19,8 @@ import java_cup.runtime.*;
 BLANCOS = [ \t\r\n]+
 D = [0-9]+
 L = [a-zA-Z_]
-Cadena = "\""(.*)"\""
+Cadena = \"(.*)\"
+//Cadenita = \"[A-Z]|[a-z]|[0-9]\"
 palabra = ({L}+|{D}*)+
 lista = (([0-9]{BLANCOS}*",")+{BLANCOS}*|[0-9])+
 lista_letras = (({L}{BLANCOS}*",")+{BLANCOS}*|{L})+
@@ -27,7 +28,7 @@ numero = [0-9]","{BLANCOS}
 //Operador = ("."|"|"|"*"|"+"|"?")
 
 
-ExpReg = "{"[a-zA-Z_]+"}"
+ExpReg = "{"([a-zA-Z_]|[0-9]+)+"}"
 
 
 //ExpReg = (("."{BLANCOS}*|"|"{BLANCOS}*|"*"{BLANCOS}*|"+"{BLANCOS}*|"?"{BLANCOS}*)+{BLANCOS}*)+
@@ -65,6 +66,7 @@ COMENTARIO_MULTILINEA = "<!""!"*([^!>]|[^!]">"|"!"[^>])*"!"*"!>"
 {lista} {return new Symbol(sym.Lista,yycolumn,yyline,yytext());}
 {lista_letras} {return new Symbol(sym.Lista_letras,yycolumn,yyline,yytext());}
 {Cadena}    {return new Symbol(sym.Cadena, yycolumn, yyline, yytext());}
+//{Cadenita}    {return new Symbol(sym.Cadenita, yycolumn, yyline, yytext());}
 //{Reg} {return new Symbol(sym.Reg,yycolumn,yyline,yytext());}
 //{Operador} {return new Symbol(sym.Operador,yycolumn,yyline,yytext());}
 {ExpReg} {return new Symbol(sym.ExpReg,yycolumn,yyline,yytext());}
