@@ -241,10 +241,12 @@ public class Principal extends javax.swing.JFrame {
             //CALCULAR ESTADOS MANDANDO LA RAIZ DEL ARBOL COMO ESTADO INICIAL
             Estado.calcularEstados(new Estado(0,nodo.anterior,nodo.anterior.split(","),null));
             Estado.estadosUsados = new ArrayList();
-            Node.listaTerminales = new ArrayList();
+            //Node.listaTerminales = new ArrayList();
             List<Estado> misEstados = new ArrayList(); 
             misEstados = Estado.misEstados;
             Estado.tabularEstados(misEstados);
+            Estado.graficarAFD(misEstados);
+            Node.listaTerminales = new ArrayList();
             
             writer.CreateTree(nodo, list_of_words+"ExpresionRegular"+Integer.toString(i));
         }

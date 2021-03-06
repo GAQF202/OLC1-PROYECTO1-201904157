@@ -5,6 +5,9 @@
  */
 package App.Clases;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Gerson

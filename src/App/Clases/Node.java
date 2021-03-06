@@ -102,9 +102,9 @@ public class Node {
             if(actual.hizq==null && actual.hder==null){
                 Siguiente nodoSig = new Siguiente(actual.valor,Integer.toString(actual.enumerador));
                 misSiguientes.add(nodoSig);
+                actual.valor = actual.valor.replace("{", "\\{");
+                actual.valor = actual.valor.replace("}", "\\}");
                 if(!listaTerminales.contains(actual.valor)){
-                    actual.valor = actual.valor.replace("{", "\\{");
-                    actual.valor = actual.valor.replace("}", "\\}");
                     listaTerminales.add(actual.valor);
                 }
             }
