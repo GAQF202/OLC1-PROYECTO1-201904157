@@ -62,8 +62,15 @@ public class Verificadores {
         
         if(actual!=null){
             for(int i=0; i<actual.transiciones.size();i++){
+                if(caracterAct.equals("\\")){
+                    count++;
+                    caracterAct += String.valueOf(entrada.charAt(count));
+                    count++;
+                }
                 //System.out.println(actual.transiciones.get(i).terminal);
+                //System.out.println(caracterAct);
                     if(actual.transiciones.get(i).aceptados.contains(caracterAct)||actual.transiciones.get(i).terminal.equals(caracterAct)){
+                        //System.out.println(actual.transiciones.get(i).terminal);
                         //System.out.println(actual.transiciones.get(i).terminal);
                         //System.out.println(caracterAct);
                         //System.out.println(count);

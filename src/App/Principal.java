@@ -245,6 +245,7 @@ public class Principal extends javax.swing.JFrame {
             CreateFile.CreateJson(Integer.toString(aument));
         }
         
+        
         jTextArea2.setText(result);
         result="";
         Sentencias.clear();
@@ -268,8 +269,8 @@ public class Principal extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        
-        newfile.NewFile("");
+        jTextArea1.setText("");
+        //newfile.NewFile("../Proyecto1");
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -288,7 +289,7 @@ public class Principal extends javax.swing.JFrame {
             if(newfile.IsOlC(SelectBinder.getAbsolutePath())){
                 newfile.NewFile(SelectBinder.getAbsolutePath());
             }else{
-                System.out.println("Los siento pana");
+                System.out.println("Archivo no encontrado");
             }
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed

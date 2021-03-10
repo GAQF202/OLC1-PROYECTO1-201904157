@@ -2,14 +2,17 @@ digraph G{
 rankdir=LR
 node[shape=circle]
 size="15"
-5158[label=""]5159[label=""]5158 -> 5159 [label=ε]
-5159[shape = doublecircle];
-5160[label=""]5161[label=""]5160 -> 5161 [label="\n"]
-5162[label=""]5163[label=""]5162 -> 5163 [label="\{digito\}"]
-5164[label=""]5165[label=""]5164 -> 5162 [label=ε]
-5164 -> 5160 [label=ε]
-5163 -> 5165 [label=ε]
-5161 -> 5165 [label=ε]
-5165 -> 5158 [label=ε]
+0[label=""]1[label=""]0 -> 1 [label=ε]
+1[shape = doublecircle];
+2[label=""]3[label=""]2 -> 3 [label="-"]
+4[label=""]5[label=""]4 -> 5 [label="\n"]
+5 -> 2 [label=ε]
+3 -> 0 [label=ε]
+6[label=""]7[label=""]6 -> 7 [label=ε]
+7[shape = doublecircle];
+8[label=""]9[label=""]8 -> 9 [label="-"]
+10[label=""]11[label=""]10 -> 11 [label="\n"]
+11 -> 8 [label=ε]
+9 -> 6 [label=ε]
 
 }

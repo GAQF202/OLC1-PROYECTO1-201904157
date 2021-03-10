@@ -1,0 +1,28 @@
+INICIO ::= EXP;
+
+EXP ::= Llave_a DECLARACION Cierre Cierre Cierre Cierre SENTENCIA Llave_c 
+
+SENTENCIA ::= SENTENCIA palabra Dos_p Cadena P_coma
+              | palabra Dos_p Cadena P_coma
+
+DECLARACION ::= DECLARACION conj Dos_p palabra Menos Mayor NOTACION P_coma
+               | DECLARACION  palabra Menos Mayor REG P_coma
+               | conj Dos_p palabra Menos Mayor NOTACION P_coma
+               | palabra Menos Mayor REG P_coma    
+
+REG ::= Puntor REG REG
+        |Pipe REG REG
+        |Mas REG 
+        |Asterisco REG 
+        |Interrogacion REG 
+        |ComillaDoble
+        |ComillaSimple
+        |SaltoLinea
+        |ExpReg
+        |Cadenita
+
+NOTACION ::= Digito Virgulilla Digito
+            |Letra Virgulilla Letra
+            |Caracter Virgulilla Caracter
+            |Lista_numeros
+            |Lista_letras
