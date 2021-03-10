@@ -1,0 +1,32 @@
+digraph G{
+graph [fontsize=30 labelloc="t" label="" splines=true overlap=false rankdir = "LR"];
+
+"state5" [ style = "filled" penwidth = 1 fillcolor="#86FE92" fontname = "Courier New" shape = "Mrecord" label =
+<<table border="0" cellborder="1" cellpadding="3" bgcolor="#86FE92">
+<tr><td bgcolor="black" align="center" colspan="4"><font color="white">erAzar</font></td></tr>
+
+<tr>
+<td align="left">Estado</td>
+<td>\{simbols\}</td>
+<td>\{minus\}</td>
+<td>\{mayus\}</td>
+</tr>
+
+
+<tr><td>S0(1)</td>
+<td>S1</td>
+<td>---</td>
+<td>---</td>
+</tr>
+<tr><td>S1(1,2,3)</td>
+<td>S1</td>
+<td>S2</td>
+<td>S2</td>
+</tr>
+<tr><td>S2(2,3,4)</td>
+<td>---</td>
+<td>S2</td>
+<td>S2</td>
+</tr>
+
+ </table>>];}

@@ -16,10 +16,13 @@ public class Transicion {
     
     public int estado;
     public String terminal;
+    public List<String>aceptados = new ArrayList();
     
     public Transicion(int estado, String terminal){
         this.estado = estado;
         this.terminal = terminal;
     }
+    
+   
     
 }

@@ -22,6 +22,7 @@ public class Estado {
     public static List<String> estadosUsados = new ArrayList();
     public List<String> transicionUsada = new ArrayList();
     
+    
     public Estado(int estado, String conjunto, String[] listaConj, List<Transicion> transiciones){
         this.estado = estado;
         this.conjunto = conjunto;
@@ -32,11 +33,10 @@ public class Estado {
     
     public static void calcularEstados(Estado actual){
         String[] sig;
+        //int count=actual.estado;
         int count=actual.estado;
-        
         if(!estadosUsados.contains(actual.conjunto)){
             estadosUsados.add(actual.conjunto);
-
             List<String> estadoNuevo=null; 
             count++;
             for(int i=0; i<actual.listaConj.length;i++){
@@ -46,17 +46,24 @@ public class Estado {
                         
                         if(actual.listaConj[i].equals(Node.misSiguientes.get(t).etiqueta) &&
                            Node.listaTerminales.get(j).equals(Node.misSiguientes.get(t).terminal)){
+                           //System.out.println(Node.misSiguientes.get(t).terminal);
                             
                            //AGREGA TODOS LOS SIGUIENTES AL ESTADO NUEVO
                            for(int k=0; k<Node.misSiguientes.get(t).siguientes.size();k++){
+                               
                                if(!estadoNuevo.contains(Node.misSiguientes.get(t).siguientes.get(k))){
-                                    //System.out.println(Node.misSiguientes.get(t).siguientes.get(k));
+                                    
                                     estadoNuevo.add(Node.misSiguientes.get(t).siguientes.get(k));
                                }
                            }
+                           if(Node.misSiguientes.get(t).terminal.equals("#")){
+                               actual.transiciones.add(new Transicion(count,"#"));
+                               //System.out.println(Node.misSiguientes.get(t).terminal);
+                           }///////////////////////////////////////////
                         }
                     }
                     if(!estadoNuevo.isEmpty()){
+                        
                         if(!actual.transicionUsada.contains(Node.listaTerminales.get(j))){
                             if(estadosUsados.contains(String.join(",", estadoNuevo))){
                                 actual.transicionUsada.add(Node.listaTerminales.get(j));
@@ -67,7 +74,7 @@ public class Estado {
                             }
                         }
                         calcularEstados(new Estado(count,String.join(",", estadoNuevo),String.join(",", estadoNuevo).split(","),null));
-                    }
+                    }   
                 }
                 
             }
@@ -75,18 +82,31 @@ public class Estado {
         }
     }
     
-    public static void graficarAFD(List<Estado> misEstados){
+    public static String graficarAFD(List<Estado> misEstados){
         String dot_afd="";
+        int aceptacion = 0;
         for(int i=misEstados.size()-1; i>-1; i--){
             for(int j=misEstados.get(i).transiciones.size()-1; j>-1;j--){
-                dot_afd+="S" + misEstados.get(i).estado+"->"; 
-                dot_afd+="S"+misEstados.get(i).transiciones.get(j).estado+"[label=\""+misEstados.get(i).transiciones.get(j).terminal+"\"];\n";
+                if(!misEstados.get(i).transiciones.get(j).terminal.equals("#")){
+                    dot_afd+="S" + misEstados.get(i).estado+"->"; 
+                    dot_afd+="S"+misEstados.get(i).transiciones.get(j).estado+"[label=\""+misEstados.get(i).transiciones.get(j).terminal+"\"];\n";
+                }
+                if(!misEstados.get(i).transiciones.get(j).terminal.equals("#")){
+                    aceptacion=misEstados.get(i).transiciones.get(j).estado;
+                }
             }
         }
-        System.out.println(dot_afd);
+        
+        dot_afd = "digraph finite_state_machine {\n" +
+        "rankdir=LR;\n" +
+        "size=\"8,5\"\n" +
+        "node [shape = doublecircle];S"+aceptacion+";\n" +
+        "node [shape = circle];"+dot_afd+"}";
+        //System.out.println(dot_afd);
+        return dot_afd;
     }
     
-    public static void tabularEstados(List<Estado> misEstados){
+    public static String tabularEstados(List<Estado> misEstados, String name){
         String dot="";
         
         String terminales="";
@@ -97,7 +117,7 @@ public class Estado {
         }
         String[] trans = null;
         for(int i=misEstados.size()-1; i>-1; i--){
-            dot+="<tr><td>S"+misEstados.get(i).estado+"</td>\n";
+            dot+="<tr><td>S"+misEstados.get(i).estado+"("+misEstados.get(i).conjunto+")</td>\n";
             trans = new String[Node.listaTerminales.size()];
             
             
@@ -133,7 +153,7 @@ public class Estado {
         "\n" +
         "\"state5\" [ style = \"filled\" penwidth = 1 fillcolor=\"#86FE92\" fontname = \"Courier New\" shape = \"Mrecord\" label =\n" +
         "<<table border=\"0\" cellborder=\"1\" cellpadding=\"3\" bgcolor=\"#86FE92\">\n" +
-        "<tr><td bgcolor=\"black\" align=\"center\" colspan=\""+Integer.toString(Node.listaTerminales.size())+"\"><font color=\"white\">ExpReg1</font></td></tr>\n" +
+        "<tr><td bgcolor=\"black\" align=\"center\" colspan=\""+Integer.toString(Node.listaTerminales.size())+"\"><font color=\"white\">"+name+"</font></td></tr>\n" +
         "\n" +
         "<tr>\n" +
         "<td align=\"left\">Estado</td>\n" +
@@ -142,8 +162,17 @@ public class Estado {
         "\n" +
         "\n" +
         dot+"\n </table>>];}";
-        System.out.println(tabla);
+        //System.out.println(tabla);
+        return tabla;
     }
    
+    
+    public static void verEstados(List<Estado> misEstados, String name){
+        System.out.println(name);
+        for(int i=0; i<misEstados.size(); i++){
+            System.out.println(misEstados.get(i).estado);
+        
+        }
+    }
     
 }

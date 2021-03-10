@@ -1,0 +1,15 @@
+digraph G{
+rankdir=LR
+node[shape=circle]
+size="15"
+5158[label=""]5159[label=""]5158 -> 5159 [label=ε]
+5159[shape = doublecircle];
+5160[label=""]5161[label=""]5160 -> 5161 [label="\n"]
+5162[label=""]5163[label=""]5162 -> 5163 [label="\{digito\}"]
+5164[label=""]5165[label=""]5164 -> 5162 [label=ε]
+5164 -> 5160 [label=ε]
+5163 -> 5165 [label=ε]
+5161 -> 5165 [label=ε]
+5165 -> 5158 [label=ε]
+
+}

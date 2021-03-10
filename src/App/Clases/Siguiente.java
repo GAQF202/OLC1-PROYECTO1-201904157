@@ -24,7 +24,7 @@ public class Siguiente {
         this.etiqueta = etiqueta;
     }
     
-    public static void tabularSiguientes(List<Siguiente> listaSig){
+    public static String tabularSiguientes(List<Siguiente> listaSig, String name){
         String dot="";
         for(int i=listaSig.size()-1; i>-1;i--){
             listaSig.get(i).terminal=listaSig.get(i).terminal.replace("{", "\\{");
@@ -39,7 +39,7 @@ public class Siguiente {
         "\n" +
         "\"state5\" [ style = \"filled\" penwidth = 1 fillcolor=\"#86FE92\" fontname = \"Courier New\" shape = \"Mrecord\" label =\n" +
         "<<table border=\"0\" cellborder=\"1\" cellpadding=\"3\" bgcolor=\"#86FE92\">\n" +
-        "<tr><td bgcolor=\"black\" align=\"center\" colspan=\"3\"><font color=\"white\">ExpReg1</font></td></tr>\n" +
+        "<tr><td bgcolor=\"black\" align=\"center\" colspan=\"3\"><font color=\"white\">"+name+"</font></td></tr>\n" +
         "\n" +
         "<tr>\n" +
         "<td align=\"left\">Terminal</td>\n" +
@@ -47,6 +47,7 @@ public class Siguiente {
         "<td align=\"left\">Siguientes</td>\n" +
         "</tr>"+dot+"</table>>];}";
        // System.out.println(tabla);
+        return tabla;
     }
     
     public static void agregarSiguiente(String nodos, String siguientes){

@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import javax.swing.JFileChooser;
@@ -46,13 +47,17 @@ public class CreateFile {
     public String ReadFile(String path){
         String bfRead;
         String Text = "";
+        String line = "";
         this.GlobalPath = path;
         
         try{
         BufferedReader bf = new BufferedReader(new FileReader(path));
-        while((bfRead = bf.readLine()) != null){
-            Text += bfRead;
-        }
+        //while((bfRead = bf.readLine()) != null){
+            while(((line=bf.readLine())!=null)){
+            
+                Text += line+"\n";
+            }
+        //}
         
         }catch(Exception e){
             System.out.println(e.toString());
@@ -88,7 +93,7 @@ public class CreateFile {
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("./" + name + ".dot");
+            fichero = new FileWriter("./ARBOLES_201904157/" + name + ".dot");
             pw = new PrintWriter(fichero);
             pw.println("digraph G{");
             pw.println("rankdir=UD");
@@ -107,6 +112,114 @@ public class CreateFile {
                 e2.printStackTrace();
             }
         }
+        digraph("./ARBOLES_201904157/" +name);
+    }
+    
+    
+    
+    
+    public static void CreateDigraph(String dot, String name){
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        try {
+            fichero = new FileWriter(name + ".dot");
+            pw = new PrintWriter(fichero);
+            pw.println(dot);
+        } catch (Exception e) {
+            System.out.println("error, no se realizo el archivo");
+        } finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        digraph(name);
+    }
+    
+    
+    
+    
+    public static void digraph(String name){
+            try {
+
+              String dotPath = "C:\\Archivos de programa\\Graphviz\\bin\\dot.exe";
+
+              String fileInputPath = "./" + name + ".dot";
+              String fileOutputPath = "./" + name + ".png";
+
+              String tParam = "-Tpng";
+              String tOParam = "-o";
+
+              String[] cmd = new String[5];
+              cmd[0] = dotPath;
+              cmd[1] = tParam;
+              cmd[2] = fileInputPath;
+              cmd[3] = tOParam;
+              cmd[4] = fileOutputPath;
+
+              Runtime rt = Runtime.getRuntime();
+
+              rt.exec( cmd );
+
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            } finally {
+            }
+    }
+    
+    
+    public static void CreateJson(String name){
+        String content ="";
+        for(int i=0; i<Verificadores.json.size(); i++){
+            content+=Verificadores.json.get(i);
+        }
+        
+        
+        try {
+
+            FileWriter file = new FileWriter("./SALIDAS_201904157/salida"+name+".json");
+            file.write("[\n"+content+"]");
+            file.flush();
+            file.close();
+            Verificadores.json.clear();
+
+        } catch (IOException e) {
+            System.out.println("No se pudo generar el archivo JSON");
+                //manejar error
+        }
+        
+        
+        
+    }
+    
+    
+        public static void CreateAfnd(String dot, String name){
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        try {
+            fichero = new FileWriter("./AFND_20190157/" + name + ".dot");
+            pw = new PrintWriter(fichero);
+            pw.println("digraph G{");
+            pw.println("rankdir=LR");
+            pw.println("node[shape=circle]");
+            pw.println("size=\"15\"");
+            pw.println(dot);
+            pw.println("}");
+        } catch (Exception e) {
+            System.out.println("error, no se realizo el archivo");
+        } finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        digraph("./AFND_20190157/" +name);
     }
     
 }

@@ -19,17 +19,21 @@ import java_cup.runtime.*;
 BLANCOS = [ \t\r\n]+
 D = [0-9]+
 L = [a-zA-Z_]
-Cadena = \"(.*)\"
-//Cadenita = \"[A-Z]|[a-z]|[0-9]\"
+//Cadenita = \"(.?)\"
+Cadenita = (\"(.?)\")
+Caracter = (.?)
+//Cadena = ({Cadenita}+)
+//Cadena = \"(.*)\"
+Cadena = [\"]([^\"\n]|(\\\"))*[\"]
 palabra = ({L}+|{D}*)+
 lista = (([0-9]{BLANCOS}*",")+{BLANCOS}*|[0-9])+
 lista_letras = (({L}{BLANCOS}*",")+{BLANCOS}*|{L})+
 numero = [0-9]","{BLANCOS}
+//Cadenita = \"([A-Z]|[a-z]|[0-9])\"
 //Operador = ("."|"|"|"*"|"+"|"?")
 
 
 ExpReg = "{"([a-zA-Z_]|[0-9]+)+"}"
-
 
 //ExpReg = (("."{BLANCOS}*|"|"{BLANCOS}*|"*"{BLANCOS}*|"+"{BLANCOS}*|"?"{BLANCOS}*)+{BLANCOS}*)+
 //Conjunto = 
@@ -53,6 +57,10 @@ COMENTARIO_MULTILINEA = "<!""!"*([^!>]|[^!]">"|"!"[^>])*"!"*"!>"
 ">" {return new Symbol(sym.Mayor, yyline, yychar, yytext());}
 "." {return new Symbol(sym.Punto, yyline, yychar, yytext());}
 "," {return new Symbol(sym.Coma, yyline, yychar, yytext());}
+"\"" {return new Symbol(sym.ComillasDobles, yyline, yychar, yytext());}
+"\\\"" {return new Symbol(sym.ComillaDoble, yyline, yychar, yytext());}
+"\\\'" {return new Symbol(sym.ComillaSimple, yyline, yychar, yytext());}
+"\\n" {return new Symbol(sym.SaltoLinea, yyline, yychar, yytext());}
 "CONJ" {return new Symbol(sym.conj, yyline, yychar, yytext());}
 \n          {yycolumn=1;}
 
@@ -65,8 +73,9 @@ COMENTARIO_MULTILINEA = "<!""!"*([^!>]|[^!]">"|"!"[^>])*"!"*"!>"
 {palabra} {return new Symbol(sym.palabra,yycolumn,yyline,yytext());}
 {lista} {return new Symbol(sym.Lista,yycolumn,yyline,yytext());}
 {lista_letras} {return new Symbol(sym.Lista_letras,yycolumn,yyline,yytext());}
+{Cadenita}   {return new Symbol(sym.Cadenita, yycolumn, yyline, yytext());}
 {Cadena}    {return new Symbol(sym.Cadena, yycolumn, yyline, yytext());}
-//{Cadenita}    {return new Symbol(sym.Cadenita, yycolumn, yyline, yytext());}
+{Caracter}    {return new Symbol(sym.Caracter, yycolumn, yyline, yytext());}
 //{Reg} {return new Symbol(sym.Reg,yycolumn,yyline,yytext());}
 //{Operador} {return new Symbol(sym.Operador,yycolumn,yyline,yytext());}
 {ExpReg} {return new Symbol(sym.ExpReg,yycolumn,yyline,yytext());}

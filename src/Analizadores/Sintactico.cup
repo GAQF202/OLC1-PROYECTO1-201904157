@@ -6,6 +6,8 @@ import java.util.*;
 import App.Clases.Element;
 import App.Clases.Node;
 import App.Clases.Siguiente;
+import App.Clases.Set;
+import App.Clases.Sentencia;
 
 parser code
 {:
@@ -13,6 +15,7 @@ parser code
     public int contador=1;
     public int numeracion = 1;
     public static Node raiz;
+    public String conjName="";
 
     public void syntax_error(Symbol s)
 
@@ -28,8 +31,9 @@ parser code
 
 terminal String Coma, Cierre, Virgulilla, Llave_a, Llave_c, Dos_p, conj, palabra, Lista, Pipe, Punto, Asterisco, Mas, Interrogacion;
 terminal String Reg, Menos, Mayor,Lista_letras;
-terminal String L, numero, Operador,Cadena, ExpReg, Cadenita, P_coma;
-terminal String D;
+terminal String numero, Operador,Cadena, ExpReg, Cadenita, P_coma;
+terminal String ComillaDoble, ComillaSimple, SaltoLinea, ComillasDobles;
+terminal String D, L, Caracter;
 
 non terminal INICIO;
 non terminal EXP;
@@ -46,23 +50,27 @@ INICIO ::= EXP;
 
 EXP ::= Llave_a DECLARACION Cierre Cierre Cierre Cierre SENTENCIA Llave_c /*:d {:App.Principal.list_of_words+=d+"\n";:}*/ ;
 
-SENTENCIA ::= SENTENCIA palabra Dos_p Cadena P_coma
-              | palabra Dos_p Cadena P_coma;
+SENTENCIA ::= SENTENCIA palabra:sentencia Dos_p Cadena:entrada P_coma{:Sentencia.guardarSentencia(sentencia, entrada+"#");:}
+              | palabra:sentencia Dos_p  Cadena:entrada P_coma{:Sentencia.guardarSentencia(sentencia, entrada+"#");:};
 
-DECLARACION ::= DECLARACION conj Dos_p palabra Menos Mayor NOTACION P_coma   //{:App.Principal.Reconocido.ConvertToInfix(App.Principal.Characters.getPila()); parser.contador=0;:}
-               | DECLARACION  palabra Menos Mayor REG:var1 P_coma{:parser.raiz=var1; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion); Node.ult=parser.numeracion; parser.contador=1; parser.numeracion = 1;:}
-               | conj Dos_p palabra Menos Mayor NOTACION P_coma{::}
-               | palabra Menos Mayor REG:var1 P_coma{:parser.raiz=var1; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion);Node.ult=parser.numeracion; parser.contador=1; parser.numeracion = 1; :} ;       
+DECLARACION ::= DECLARACION conj Dos_p palabra:conjunto{:parser.conjName="{"+conjunto+"}";:} Menos Mayor NOTACION P_coma   //{:App.Principal.Reconocido.ConvertToInfix(App.Principal.Characters.getPila()); parser.contador=0;:}
+               | DECLARACION  palabra:name Menos Mayor REG:var1 P_coma{:parser.raiz=var1; var1.expresionName=name; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion); Node.ult=parser.numeracion; parser.contador=1; parser.numeracion = 1;:}
+               | conj Dos_p palabra:conjunto{:parser.conjName="{"+conjunto+"}";:} Menos Mayor NOTACION P_coma{::}
+               | palabra:name Menos Mayor REG:var1 P_coma{:parser.raiz=var1; var1.expresionName=name; App.Principal.ExpsRegs.add(var1);var1.setUltimo(parser.numeracion);Node.ult=parser.numeracion; parser.contador=1; parser.numeracion = 1; :} ;       
 
 REG ::= Punto:operador REG:var1 REG:var2 {:RESULT=new Node(var1, var2, operador, parser.contador,"N","","",0); parser.contador++;:}
         |Pipe:operador REG:var1 REG :var2 {:RESULT=new Node(var1, var2, operador, parser.contador,"N","","",0); parser.contador++;:}
         |Mas:operador REG :var1 {:RESULT=new Node(var1, null, operador, parser.contador,"N","","",0); parser.contador++;:}
         |Asterisco:operador REG :var1 {:RESULT=new Node(var1, null, operador, parser.contador,"A","","",0); parser.contador++;:}
         |Interrogacion:operador REG :var1 {:RESULT=new Node(var1, null, operador, parser.contador,"A","","",0); parser.contador++;:}
+        |ComillaDoble:operador {:RESULT=new Node(null, null, operador, parser.contador,"N",Integer.toString(parser.numeracion),Integer.toString(parser.numeracion),parser.numeracion);parser.numeracion++; parser.contador++;/*Siguiente.misSiguientes.add(new Siguiente(operador,Integer.toString(parser.numeracion)));*/:}
+        |ComillaSimple:operador {:RESULT=new Node(null, null, operador, parser.contador,"N",Integer.toString(parser.numeracion),Integer.toString(parser.numeracion),parser.numeracion);parser.numeracion++; parser.contador++;/*Siguiente.misSiguientes.add(new Siguiente(operador,Integer.toString(parser.numeracion)));*/:}
+        |SaltoLinea:operador {:RESULT=new Node(null, null, operador, parser.contador,"N",Integer.toString(parser.numeracion),Integer.toString(parser.numeracion),parser.numeracion);parser.numeracion++; parser.contador++;/*Siguiente.misSiguientes.add(new Siguiente(operador,Integer.toString(parser.numeracion)));*/:}
         |ExpReg:operador {:RESULT=new Node(null, null, operador, parser.contador,"N",Integer.toString(parser.numeracion),Integer.toString(parser.numeracion),parser.numeracion);parser.numeracion++; parser.contador++;/*Siguiente.misSiguientes.add(new Siguiente(operador,Integer.toString(parser.numeracion)));*/:}
-        |Cadena:operador {:RESULT=new Node(null, null, operador.replace("\"",""), parser.contador,"N",Integer.toString(parser.numeracion),Integer.toString(parser.numeracion),parser.numeracion);parser.numeracion++; parser.contador++; /*Siguiente.misSiguientes.add(new Siguiente(operador,Integer.toString(parser.numeracion)));*/:};
+        |Cadenita:operador {:RESULT=new Node(null, null, operador.replace("\"",""), parser.contador,"N",Integer.toString(parser.numeracion),Integer.toString(parser.numeracion),parser.numeracion);parser.numeracion++; parser.contador++; /*Siguiente.misSiguientes.add(new Siguiente(operador,Integer.toString(parser.numeracion)));*/:};
 
-NOTACION ::= D  Virgulilla D 
-            |L Virgulilla L 
-            |Lista
-            |Lista_letras;
+NOTACION ::= D:dig1 Virgulilla D:dig2 {:Set.createSet(parser.conjName, dig1, dig2);:}
+            |L:let1 Virgulilla L:let2 {:Set.createSet(parser.conjName, let1, let2);:} 
+            |Caracter:car1 Virgulilla Caracter:car2 {:Set.createRangeSet(parser.conjName, car1, car2);:}
+            |Lista:list{:Set.createListSet(parser.conjName, list);:}
+            |Lista_letras:list{:Set.createListSet(parser.conjName, list);:};

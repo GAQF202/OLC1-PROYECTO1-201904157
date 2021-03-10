@@ -10,30 +10,35 @@ public class sym {
   /* terminals */
   public static final int Virgulilla = 4;
   public static final int Dos_p = 7;
-  public static final int ExpReg = 24;
+  public static final int ExpReg = 23;
   public static final int Cierre = 3;
-  public static final int Cadenita = 25;
+  public static final int Cadenita = 24;
   public static final int Mas = 14;
-  public static final int numero = 21;
+  public static final int ComillaDoble = 26;
+  public static final int numero = 20;
   public static final int Mayor = 18;
+  public static final int ComillasDobles = 29;
   public static final int conj = 8;
-  public static final int L = 20;
+  public static final int L = 31;
   public static final int Llave_c = 6;
   public static final int Llave_a = 5;
   public static final int Coma = 2;
-  public static final int P_coma = 26;
+  public static final int P_coma = 25;
   public static final int Asterisco = 13;
-  public static final int D = 27;
-  public static final int Cadena = 23;
-  public static final int Operador = 22;
+  public static final int D = 30;
+  public static final int Cadena = 22;
+  public static final int Operador = 21;
   public static final int Reg = 16;
   public static final int EOF = 0;
   public static final int Lista = 10;
+  public static final int ComillaSimple = 27;
   public static final int Interrogacion = 15;
   public static final int palabra = 9;
   public static final int error = 1;
   public static final int Menos = 17;
   public static final int Punto = 12;
+  public static final int Caracter = 32;
+  public static final int SaltoLinea = 28;
   public static final int Lista_letras = 19;
   public static final int Pipe = 11;
   public static final String[] terminalNames = new String[] {
@@ -57,14 +62,19 @@ public class sym {
   "Menos",
   "Mayor",
   "Lista_letras",
-  "L",
   "numero",
   "Operador",
   "Cadena",
   "ExpReg",
   "Cadenita",
   "P_coma",
-  "D"
+  "ComillaDoble",
+  "ComillaSimple",
+  "SaltoLinea",
+  "ComillasDobles",
+  "D",
+  "L",
+  "Caracter"
   };
 }
 

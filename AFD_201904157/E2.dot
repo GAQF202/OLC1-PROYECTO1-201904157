@@ -1,0 +1,40 @@
+digraph finite_state_machine {
+rankdir=LR;
+size="8,5"
+node [shape = doublecircle];S4;
+node [shape = circle];S0->S5[label="c"];
+S0->S1[label="2"];
+S0->S1[label="U"];
+S1->S2[label="0"];
+S2->S3[label="2"];
+S3->S4[label="1"];
+S4->S5[label="i"];
+S4->S5[label="c"];
+S5->S6[label="n"];
+S6->S7[label="g"];
+S7->S8[label="e"];
+S8->S9[label="n"];
+S9->S10[label="i"];
+S10->S11[label="e"];
+S11->S12[label="r"];
+S12->S23[label="i"];
+S5->S6[label="o"];
+S6->S7[label="m"];
+S7->S8[label="p"];
+S8->S9[label="i"];
+S9->S10[label="1"];
+S10->S4[label="a"];
+S1->S2[label="S"];
+S2->S3[label="A"];
+S3->S4[label="C"];
+S4->S5[label="2"];
+S4->S5[label="c"];
+S5->S6[label="0"];
+S6->S7[label="2"];
+S7->S8[label="0"];
+S8->S9[label="1"];
+S5->S6[label="o"];
+S6->S7[label="v"];
+S7->S8[label="i"];
+S8->S4[label="d"];
+}

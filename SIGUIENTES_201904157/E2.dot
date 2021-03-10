@@ -1,0 +1,117 @@
+digraph G{
+graph [fontsize=30 labelloc="t" label="" splines=true overlap=false rankdir = "LR"];
+
+"state5" [ style = "filled" penwidth = 1 fillcolor="#86FE92" fontname = "Courier New" shape = "Mrecord" label =
+<<table border="0" cellborder="1" cellpadding="3" bgcolor="#86FE92">
+<tr><td bgcolor="black" align="center" colspan="3"><font color="white">E2</font></td></tr>
+
+<tr>
+<td align="left">Terminal</td>
+<td align="left">Hoja</td>
+<td align="left">Siguientes</td>
+</tr><tr><td>U</td>
+<td>1</td>
+<td>[2]</td></tr>
+<tr><td>S</td>
+<td>2</td>
+<td>[3]</td></tr>
+<tr><td>A</td>
+<td>3</td>
+<td>[4]</td></tr>
+<tr><td>C</td>
+<td>4</td>
+<td>[25, 30]</td></tr>
+<tr><td>2</td>
+<td>5</td>
+<td>[6]</td></tr>
+<tr><td>0</td>
+<td>6</td>
+<td>[7]</td></tr>
+<tr><td>2</td>
+<td>7</td>
+<td>[8]</td></tr>
+<tr><td>1</td>
+<td>8</td>
+<td>[9, 15]</td></tr>
+<tr><td>c</td>
+<td>9</td>
+<td>[10]</td></tr>
+<tr><td>o</td>
+<td>10</td>
+<td>[11]</td></tr>
+<tr><td>m</td>
+<td>11</td>
+<td>[12]</td></tr>
+<tr><td>p</td>
+<td>12</td>
+<td>[13]</td></tr>
+<tr><td>i</td>
+<td>13</td>
+<td>[14]</td></tr>
+<tr><td>1</td>
+<td>14</td>
+<td>[24]</td></tr>
+<tr><td>i</td>
+<td>15</td>
+<td>[16]</td></tr>
+<tr><td>n</td>
+<td>16</td>
+<td>[17]</td></tr>
+<tr><td>g</td>
+<td>17</td>
+<td>[18]</td></tr>
+<tr><td>e</td>
+<td>18</td>
+<td>[19]</td></tr>
+<tr><td>n</td>
+<td>19</td>
+<td>[20]</td></tr>
+<tr><td>i</td>
+<td>20</td>
+<td>[21]</td></tr>
+<tr><td>e</td>
+<td>21</td>
+<td>[22]</td></tr>
+<tr><td>r</td>
+<td>22</td>
+<td>[23]</td></tr>
+<tr><td>i</td>
+<td>23</td>
+<td>[24]</td></tr>
+<tr><td>a</td>
+<td>24</td>
+<td>[25, 30]</td></tr>
+<tr><td>c</td>
+<td>25</td>
+<td>[26]</td></tr>
+<tr><td>o</td>
+<td>26</td>
+<td>[27]</td></tr>
+<tr><td>v</td>
+<td>27</td>
+<td>[28]</td></tr>
+<tr><td>i</td>
+<td>28</td>
+<td>[29]</td></tr>
+<tr><td>d</td>
+<td>29</td>
+<td>[25, 30]</td></tr>
+<tr><td>2</td>
+<td>30</td>
+<td>[31]</td></tr>
+<tr><td>0</td>
+<td>31</td>
+<td>[32]</td></tr>
+<tr><td>2</td>
+<td>32</td>
+<td>[33]</td></tr>
+<tr><td>0</td>
+<td>33</td>
+<td>[34]</td></tr>
+<tr><td>1</td>
+<td>34</td>
+<td>[35]</td></tr>
+<tr><td>#</td>
+<td>35</td>
+<td>[]</td></tr>
+</table>>];}

@@ -25,9 +25,20 @@ public class Node {
     public int enumerador;
     public int ultimo;
     
+    //VARIABLES PARA ENCONTRAR EL AFND
+    public String nodo1;
+    public String nodo2;
+    public static String dotAfd="";
+    public static int countAfd=0;
+    
+    //VARIABLES PARA GUARDAR EL NOMBRE DE LA EXPRESION Y LA EXPRESION EN INFIJO
+    public String expresionName;
+    public String infixExpresion;
+    
     public static int ult;
     public static List<Siguiente> misSiguientes;
     public static List<String>listaTerminales=new ArrayList();
+    
 
     public int getUltimo() {
         return ultimo;
@@ -69,6 +80,14 @@ public class Node {
                         actual.anterior= actual.hizq.anterior + "," + actual.hder.anterior;
                         actual.siguiente=actual.hizq.siguiente + "," + actual.hder.siguiente;
                     }
+                    actual.nodo1 = Integer.toString(countAfd++);
+                    dotAfd += actual.nodo1 + "[label=\"\"]";
+                    actual.nodo2 = Integer.toString(countAfd++);
+                    dotAfd += actual.nodo2 + "[label=\"\"]";
+                    dotAfd += actual.nodo1 +" -> "+ actual.hizq.nodo1 + " [label=ε]\n";
+                    dotAfd += actual.nodo1 +" -> "+ actual.hder.nodo1 + " [label=ε]\n";
+                    dotAfd += actual.hizq.nodo2 +" -> "+ actual.nodo2 + " [label=ε]\n"; 
+                    dotAfd += actual.hder.nodo2 +" -> "+ actual.nodo2 + " [label=ε]\n"; 
                 }else if(actual.valor.equals(".")){
                     if(actual.hizq.anulabilidad.equals("A") && actual.hder.anulabilidad.equals("A")){
                         actual.anulabilidad="A";
@@ -88,6 +107,9 @@ public class Node {
                         }
                     }
                     Siguiente.agregarSiguiente(actual.hizq.siguiente,actual.hder.anterior);
+                    actual.nodo1 = actual.hizq.nodo1;
+                    actual.nodo2 = actual.hder.nodo2;
+                    dotAfd += actual.hizq.nodo2 +" -> "+ actual.hder.nodo1 + " [label=ε]\n";
                 }
             }else{
                 recorrerArbol(actual.hizq);
@@ -96,7 +118,32 @@ public class Node {
                 
                 if(actual.valor.equals("*") || actual.valor.equals("+")){
                     Siguiente.agregarSiguiente(actual.siguiente,actual.anterior);
-                }                
+                    actual.nodo1 = Integer.toString(countAfd++);
+                    dotAfd += actual.nodo1 + "[label=\"\"]";
+                    actual.nodo2 = Integer.toString(countAfd++);
+                    dotAfd += actual.nodo2 + "[label=\"\"]";
+                    if(actual.valor.equals("*")){
+                        dotAfd += actual.nodo1 +" -> "+ actual.nodo2 + " [label=ε]\n";
+                        dotAfd += actual.hizq.nodo2 +" -> "+ actual.nodo2 + " [label=ε]\n";
+                        dotAfd += actual.nodo1 +" -> "+ actual.hizq.nodo1 + " [label=ε]\n";
+                        dotAfd += actual.hizq.nodo2 +" -> "+ actual.hizq.nodo1 + " [label=ε]\n";
+                    }else{
+                        dotAfd += actual.hizq.nodo2 +" -> "+ actual.nodo2 + " [label=ε]\n";
+                        dotAfd += actual.nodo1 +" -> "+ actual.hizq.nodo1 + " [label=ε]\n";
+                        dotAfd += actual.hizq.nodo2 +" -> "+ actual.hizq.nodo1 + " [label=ε]\n";
+                    }
+                }
+                
+                if(actual.valor.equals("?")){
+                    actual.nodo1 = Integer.toString(countAfd++);
+                    dotAfd += actual.nodo1 + "[label=\"\"]";
+                    actual.nodo2 = Integer.toString(countAfd++);
+                    dotAfd += actual.nodo2 + "[label=\"\"]";
+                    
+                    dotAfd += actual.nodo1 +" -> "+ actual.nodo2 + " [label=ε]\n";
+                    dotAfd += actual.hizq.nodo2 +" -> "+ actual.nodo2 + " [label=ε]\n";
+                    dotAfd += actual.nodo1 +" -> "+ actual.hizq.nodo1 + " [label=ε]\n";
+                }
             }
         }else{
             if(actual.hizq==null && actual.hder==null){
@@ -107,6 +154,17 @@ public class Node {
                 if(!listaTerminales.contains(actual.valor)){
                     listaTerminales.add(actual.valor);
                 }
+                actual.nodo1 = Integer.toString(countAfd++);
+                dotAfd += actual.nodo1 + "[label=\"\"]";
+                actual.nodo2 = Integer.toString(countAfd++);
+                dotAfd += actual.nodo2 + "[label=\"\"]";
+                
+                if(actual.valor.equals("#")){
+                    dotAfd += actual.nodo1 +" -> "+ actual.nodo2 + " [label=ε]\n";
+                    dotAfd += actual.nodo2 + "[shape = doublecircle];\n";
+                }else{
+                    dotAfd += actual.nodo1 +" -> "+ actual.nodo2 + " [label=\""+actual.valor+"\"]\n";
+                }
             }
 
         }
@@ -114,6 +172,25 @@ public class Node {
     
     
     public String getCodigoInterno(){
+        String etiqueta="";
+        
+        if(hizq==null && hder==null){
+            etiqueta = "nodo"+id+"[label=\""+anterior+"|{"+anulabilidad+"|"+valor+"|id: "+enumerador+"}|{"+ siguiente +"}\"];\n";
+        }else{
+            etiqueta = "nodo"+id+"[label=\""+anterior+"|{"+anulabilidad+"|"+valor+"|id: "+enumerador+"}|{"+ siguiente +"}\"];\n";
+        }
+        //CREACION DE HOJA CON HIJOS
+        if(hizq !=null){
+            etiqueta+=hizq.getCodigoInterno()+"nodo"+id+"->nodo"+hizq.id+";\n";
+        }
+        if(hder!=null){
+            etiqueta+=hder.getCodigoInterno()+"nodo"+id+"->nodo"+hder.id+";\n";
+        }
+        return etiqueta;
+    }
+    
+    
+    public String getAFND(){
         String etiqueta="";
         
         if(hizq==null && hder==null){

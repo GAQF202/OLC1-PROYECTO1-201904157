@@ -1,0 +1,7 @@
+digraph finite_state_machine {
+rankdir=LR;
+size="8,5"
+node [shape = doublecircle];S1;
+node [shape = circle];S0->S1[label="\n"];
+S0->S1[label="\{digito\}"];
+}

@@ -6,12 +6,16 @@
 package App;
 import App.Clases.*;
 import analizadores.parser;
+import java.awt.Image;
 import java.io.File;
 import javax.swing.JFileChooser;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import javax.swing.ImageIcon;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  *
@@ -31,6 +35,10 @@ public class Principal extends javax.swing.JFrame {
     public static List<Set> Conjuntos;
     public static MyStack Characters;
     public static List<Node> ExpsRegs = new ArrayList();
+    public static List<Estado> estados = new ArrayList();
+    public static List<Sentencia> Sentencias = new ArrayList();
+    public static String result="";
+    public static int aument =0;
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,6 +50,8 @@ public class Principal extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenu3 = new javax.swing.JMenu();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jPopupMenu2 = new javax.swing.JPopupMenu();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -49,26 +59,28 @@ public class Principal extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTree2 = new javax.swing.JTree();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
 
         jMenu3.setText("jMenu3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Analizar entrada");
+        jButton1.setText("Generar autómatas");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Generar autómatas");
+        jButton3.setText("Analizar entrada");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -84,6 +96,15 @@ public class Principal extends javax.swing.JFrame {
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
+
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
+        jTree2.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jTree2.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                jTree2ValueChanged(evt);
+            }
+        });
+        jScrollPane4.setViewportView(jTree2);
 
         jMenu1.setText("Archivo");
 
@@ -119,9 +140,6 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem4);
 
-        jMenuItem5.setText("Generar XML de Salida");
-        jMenu1.add(jMenuItem5);
-
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -139,11 +157,15 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(232, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,23 +173,88 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
-                .addGap(26, 26, 26)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(93, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton3))
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(66, 66, 66))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        //newfile.create();
+        try {
+            String content = jTextArea1.getText();
+            analizadores.parser sintactico;
+         
+            sintactico = new analizadores.parser(new analizadores.Lexico(new StringReader(content)));
+            sintactico.parse();
+            
+        } catch (Exception e) {
+        }
+        
+        
+        for(int i=0; i<ExpsRegs.size(); i++){
+            
+            String fileName=ExpsRegs.get(i).expresionName;
+            //System.out.println(ExpsRegs.get(i).enumerador);
+            List<Siguiente> misSiguientes = new ArrayList(); 
+            Node.misSiguientes = misSiguientes;
+            Node nodo = new Node(ExpsRegs.get(i),new Node(null,null,"#",ExpsRegs.get(i).id+1,"N",
+            Integer.toString(ExpsRegs.get(i).getUltimo()),Integer.toString(ExpsRegs.get(i).getUltimo()),ExpsRegs.get(i).getUltimo())
+            ,".",0,"N","","",0);
+            parser.raiz.recorrerArbol(nodo);
+            Siguiente.tabularSiguientes(misSiguientes,fileName);
+            
+            
+            //CALCULAR ESTADOS MANDANDO LA RAIZ DEL ARBOL COMO ESTADO INICIAL
+            Estado.calcularEstados(new Estado(0,nodo.anterior,nodo.anterior.split(","),null));
+            Estado.estadosUsados = new ArrayList();
+
+            List<Estado> misEstados = new ArrayList(); 
+            misEstados = Estado.misEstados;
+            Verificadores ver = new Verificadores(fileName,new ArrayList());
+            for(int j=0 ; j<misEstados.size();j++){
+                ver.tablaEstados.add(misEstados.get(j));
+            }
+            Verificadores.verificador.add(ver);
+            Estado.misEstados.clear(); 
+            Node.listaTerminales = new ArrayList();
+        }
+
+        ExpsRegs.clear();
+        Verificadores.agregarConjuntos();
+        
+        for(int i=0; i<Sentencias.size();i++){
+            Sentencias.get(i).entrada=Sentencias.get(i).entrada.replace("\"","");
+            Verificadores.validar(Verificadores.encontrarVerificador(Sentencias.get(i).nombre), Sentencias.get(i).entrada,0,Sentencias.get(i).nombre);
+            
+        }
+        if(Verificadores.json.size()!=0){
+            CreateFile.CreateJson(Integer.toString(aument));
+        }
+        
+        jTextArea2.setText(result);
+        result="";
+        Sentencias.clear();
+        Verificadores.verificador = new ArrayList();
+        aument++;
     }//GEN-LAST:event_jButton3ActionPerformed
+    
+    
+    
+    
     JFileChooser browser = new JFileChooser();
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
 
@@ -187,7 +274,6 @@ public class Principal extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
-        System.out.println(jTextArea1.getText());
         newfile.SaveFile(jTextArea1.getText());
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
@@ -216,18 +302,16 @@ public class Principal extends javax.swing.JFrame {
 
         try {
             String content = jTextArea1.getText();
-            //content = content.replace(" ", "");
             analizadores.parser sintactico;
          
             sintactico = new analizadores.parser(new analizadores.Lexico(new StringReader(content)));
             sintactico.parse();
-            jTextArea1.setText(list_of_words);
             
         } catch (Exception e) {
         }
-       // System.out.println(ExpsRegs.get(2).getCodigoInterno());
         
         for(int i=0; i<ExpsRegs.size(); i++){
+            String fileName=ExpsRegs.get(i).expresionName;
             //System.out.println(ExpsRegs.get(i).enumerador);
             List<Siguiente> misSiguientes = new ArrayList(); 
             Node.misSiguientes = misSiguientes;
@@ -236,7 +320,8 @@ public class Principal extends javax.swing.JFrame {
             ,".",0,"N","","",0);
             parser.raiz.recorrerArbol(nodo);
             
-            Siguiente.tabularSiguientes(misSiguientes);
+            //Siguiente.tabularSiguientes(misSiguientes);// SE CREA LA TABLA DE SIGUIENTES
+            CreateFile.CreateDigraph(Siguiente.tabularSiguientes(misSiguientes,fileName),"./SIGUIENTES_201904157/"+fileName);
             
             //CALCULAR ESTADOS MANDANDO LA RAIZ DEL ARBOL COMO ESTADO INICIAL
             Estado.calcularEstados(new Estado(0,nodo.anterior,nodo.anterior.split(","),null));
@@ -244,16 +329,54 @@ public class Principal extends javax.swing.JFrame {
             //Node.listaTerminales = new ArrayList();
             List<Estado> misEstados = new ArrayList(); 
             misEstados = Estado.misEstados;
-            Estado.tabularEstados(misEstados);
-            Estado.graficarAFD(misEstados);
+            //Estado.tabularEstados(misEstados); //SE CREA LA TABLA DE ESTADOS
+            
+            CreateFile.CreateDigraph(Estado.tabularEstados(misEstados,fileName),"./TRANSICIONES_201904157/"+fileName);
+            //Estado.graficarAFD(misEstados);// SE CREA EL AFD
+            CreateFile.CreateDigraph(Estado.graficarAFD(misEstados),"./AFD_201904157/"+fileName);
+            
+            CreateFile.CreateAfnd(Node.dotAfd, fileName);
+            Node.dotAfd ="";
+            Estado.misEstados.clear(); 
             Node.listaTerminales = new ArrayList();
             
-            writer.CreateTree(nodo, list_of_words+"ExpresionRegular"+Integer.toString(i));
+            //SE GRAFICA EL ARBOL SINTACTICO
+            writer.CreateTree(nodo, fileName+Integer.toString(i));
         }
         ExpsRegs.clear();
-        jTextArea2.setText(Characters.getElements());
+        verArchivos();
+        jTextArea2.setText("Autómatas graficados");    
+       
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jTree2ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree2ValueChanged
+        DefaultMutableTreeNode nodo = (DefaultMutableTreeNode) evt.getPath().getLastPathComponent();;
+        Image img= new ImageIcon(nodo.getParent().toString()+"/"+nodo).getImage();
+        ImageIcon imgAct = new ImageIcon(img.getScaledInstance(500, 350, Image.SCALE_SMOOTH));
+        jLabel2.setIcon(imgAct);
+        
+    }//GEN-LAST:event_jTree2ValueChanged
+    
+    public  void verArchivos(){
+        String[] rutas = {"./SIGUIENTES_201904157","./TRANSICIONES_201904157","./AFD_201904157","./ARBOLES_201904157","./AFND_20190157"};
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Diagramas");
+        for(int i=0; i<rutas.length; i++){
+            File carpeta = new File(rutas[i]);
+            String[] listado = carpeta.list();
+            DefaultMutableTreeNode subCarpeta = new DefaultMutableTreeNode(rutas[i]);
+            for (int j=0; j< listado.length; j++) {
+                String fe = listado[j].replaceAll("^.*\\.(.*)$", "$1");
+                if(fe.equals("jpg")||fe.equals("jpeg")||fe.equals("png")){
+                    DefaultMutableTreeNode node = new DefaultMutableTreeNode(listado[j]);
+                    subCarpeta.add(node);
+                }
+            }
+            root.add(subCarpeta);
+        }
+        DefaultTreeModel model =  new DefaultTreeModel(root);
+        jTree2.setModel(model);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -286,6 +409,7 @@ public class Principal extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Principal().setVisible(true);
+
             }
         });
     }
@@ -294,6 +418,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
@@ -301,10 +426,13 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPopupMenu jPopupMenu2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTree jTree2;
     // End of variables declaration//GEN-END:variables
 }
