@@ -84,9 +84,9 @@ public class Verificadores {
             }else{
                 if(count==entrada.length()-1){
                     entrada = entrada.replaceFirst(".$","");
-                    json.add("{Valor :"+nombre+",\n"+
-                            "Expresion Regular: "+entrada+",\n"+
-                            "Resultado:Cadena válida}\n"
+                    json.add("{\n\"Valor\" :\""+nombre+"\",\n"+
+                            "\"Expresion Regular\": \""+entrada+"\",\n"+
+                            "\"Resultado\":\"Cadena válida\"\n},\n"
                     );
                     Principal.result += "La expresión " + entrada +" es válida con la expresión Regular: "+ nombre +"\n";
                 }else{

@@ -1,7 +1,0 @@
-digraph finite_state_machine {
-rankdir=LR;
-size="8,5"
-node [shape = doublecircle];S2;
-node [shape = circle];S0->S1[label="\n"];
-S1->S2[label="-"];
-}
